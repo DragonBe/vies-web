@@ -1,0 +1,18 @@
+{
+    "name": "dragonbe/vies-web",
+    "description": "A web interface to validate European VAT",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michelangelo van Dam",
+            "email": "dragonbe@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "dragonbe/vies": "1.0.1",
+        "silex/silex": "v1.2.1",
+        "symfony/validator": "2.0.7"
+    }
+}
