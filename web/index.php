@@ -33,14 +33,20 @@
     $result = null;
     if (array () !== $_POST) {
         $target = array (
-            'country' => $_POST['target-country'],
-            'vat' => $_POST['target-vat'],
+            'country' => (isset ($_POST['target-country']) && '' !== $_POST['target-country']) ? $_POST['target-country'] : null,
+            'vat' => (isset ($_POST['target-vat']) && '' !== $_POST['target-vat']) ? $_POST['target-vat'] : null,
         );
+        if (null === $target['country'] || !in_array($target['country'], array_keys($countryCodes))) {
+            $result = 'Country code is incorrect';
+        }
+        if (null === $target['vat']) {
+            $result = 'VAT requires a valid value';
+        }
         try {
             $vies = new \DragonBe\Vies\Vies();
             $result = $vies->validateVat($target['country'], $target['vat']);
         } catch (\SoapFault $e) {
-            $result = 'Service unavailable';
+            $result = 'VAT registration service VIES is unavailable right now';
         }
     }
 ?>
@@ -71,7 +77,7 @@
                     </div>
                 <?php else: ?>
                     <div class="row">
-                        <div class="col-md-12 bg-info"><div class="center-block"><p><span class="glyphicon glyphicon-info-sign"> VAT registration service is unavailable right now</span></p></div></div>
+                        <div class="col-md-12 bg-info"><div class="center-block"><p><span class="glyphicon glyphicon-info-sign"> <?php echo $result ?></span></p></div></div>
                     </div>
                 <?php endif ?>
             <?php endif ?>
