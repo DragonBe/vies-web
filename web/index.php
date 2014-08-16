@@ -113,6 +113,7 @@
                         </div>
                     </fieldset>
                     <button id="verify" class="btn btn-success"><span class="glyphicon glyphicon-check"> Validate</span></button>
+                    <a id="clear" class="btn btn-default" href="<?php echo substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], 'index.php')) ?>">Clear</a>
                 </form>
             </div>
         </div>
