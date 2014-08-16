@@ -82,7 +82,7 @@
                 <?php endif ?>
             <?php endif ?>
             <div class="row">
-                <form id="vat-validator" role="form" class="form-horizontal" enctype="application/x-www-form-urlencoded" method="post" action="<?php echo $_SERVER['SCRIPT_NAME'] ?>">
+                <form id="vat-validator" role="form" class="form-horizontal" enctype="application/x-www-form-urlencoded" method="post" action="<?php echo substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], 'index.php')) ?>">
                     <fieldset>
                         <legend>Business information</legend>
                         <div class="form-group">
