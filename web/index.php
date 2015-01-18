@@ -42,8 +42,8 @@
         if (null === $target['vat']) {
             $result = 'VAT requires a valid value';
         }
+        $vies = new \DragonBe\Vies\Vies();
         try {
-            $vies = new \DragonBe\Vies\Vies();
             $result = $vies->validateVat($target['country'], $target['vat']);
         } catch (\SoapFault $e) {
             $result = 'VAT registration service VIES is unavailable right now';
@@ -120,8 +120,10 @@
         <script type="application/javascript" src="assets/js/jquery-1.11.1.js"/>
         <script type="application/javascript" src="assets/js/bootstrap.js"/>
         <script type="application/javascript">
-            jQuery.("#verify").click(function () {
-                jQuery.("#vat-validator").submit();
+            jQuery(document).ready(function () {
+                jQuery.("#verify").click(function () {
+                    jQuery.("#vat-validator").submit();
+                });
             });
         </script>
     </body>
