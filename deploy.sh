@@ -67,8 +67,18 @@ fi
 ##################################################################################################################################
 # Download Composer
 # ----------
-echo Downloading Composer
-curl -sS https://getcomposer.org/installer | php
+#echo Downloading Composer
+#curl -sS https://getcomposer.org/installer | php
+
+##################################################################################################################################
+# Dependency install
+# ----------
+
+# Invoke Composer in the deployment directory
+echo Invoking composer install in deployment directory $DEPLOYMENT_TARGET
+php -d extension=php_intl.dll $DEPLOYMENT_TARGET/composer.phar update -v --prefer-dist --no-dev --optimize-autoloader --no-interaction
+
+##################################################################################################################################
 
 ##################################################################################################################################
 # Deployment
@@ -81,16 +91,6 @@ if [[ "$IN_PLACE_DEPLOYMENT" -ne "1" ]]; then
   "$KUDU_SYNC_CMD" -v 50 -f "$DEPLOYMENT_SOURCE" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync failed"
 fi
-
-##################################################################################################################################
-# Dependency install
-# ----------
-
-# Invoke Composer in the deployment directory
-echo Invoking composer install in deployment directory $DEPLOYMENT_TARGET
-php -d extension=php_intl.dll $DEPLOYMENT_TARGET/composer.phar install -v --prefer-dist --no-dev --optimize-autoloader --no-interaction
-
-##################################################################################################################################
 
 # Post deployment stub
 if [[ -n "$POST_DEPLOYMENT_ACTION" ]]; then
