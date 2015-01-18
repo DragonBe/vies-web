@@ -60,8 +60,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link rel="stylesheet" href="assets/css/bootstrap.css"/>
         <link rel="stylesheet" href="assets/css/bootstrap-theme.css"/>
+        <link rel="stylesheet" href="assets/css/style.css"/>
     </head>
     <body>
+        <div id="fork-us">
+            <a class="fork-us-link" href="https://github.com/dragonbe/vies" title="Fork us on GitHub">
+                <img src="assets/images/fork-us-on-github.png" width="149" height="149" alt="Fork us on GitHub"/>
+            </a>
+        </div>
         <div class="container">
             <div class="row">
                 <h1>Validate European VAT</h1>
@@ -98,7 +104,6 @@
                                     <?php endforeach ?>
                                 </select>
                             </div>
-                            <div class="col-sm-2"><span class="glyphicon glyphicon-question-sign"/></div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="target-vat">VAT registration number</label>
@@ -109,7 +114,6 @@
                                     <input class="form-control" type="text" name="target-vat" id="target-vat" placeholder="123456789"/>
                                 <?php endif ?>
                             </div>
-                            <div class="col-sm-2"><span class="glyphicon glyphicon-question-sign"/></div>
                         </div>
                     </fieldset>
                     <button id="verify" class="btn btn-success"><span class="glyphicon glyphicon-check"> Validate</span></button>
