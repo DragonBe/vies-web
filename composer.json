@@ -14,6 +14,7 @@
         "ext-soap": "*",
         "dragonbe/vies": "1.0.2",
         "silex/silex": "v1.2.1",
-        "symfony/validator": "2.0.7"
+        "symfony/validator": "2.0.7",
+        "sentry/sentry": "^1.6"
     }
 }
