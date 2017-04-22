@@ -1,0 +1,5 @@
+<?php
+
+$config = [
+    'sentry' => '', // Sign up at https://sentry.io/at/lonestarphp
+];

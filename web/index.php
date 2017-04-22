@@ -6,6 +6,14 @@
     }
 
     require_once dirname(__DIR__) . '/vendor/autoload.php';
+    require_once dirname(__DIR__) . '/config/config.php';
+
+    $client = new Raven_Client($config['sentry']);
+    $error_handler = new Raven_ErrorHandler($client);
+    $error_handler->registerExceptionHandler();
+    $error_handler->registerErrorHandler();
+    $error_handler->registerShutdownFunction();
+
     $countryCodes = array (
         'AT' => 'Austria',
         'BE' => 'Belgium',
