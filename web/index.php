@@ -1,18 +1,20 @@
 <?php
 
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
+    require_once dirname(__DIR__) . '/config/config.php';
+
+    Sentry\init(['dsn' => $config['sentry']]);
+
+
     $filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
     if (php_sapi_name() === 'cli-server' && is_file($filename)) {
         return false;
     }
-
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
-    require_once dirname(__DIR__) . '/config/config.php';
-
-    $client = new Raven_Client($config['sentry']);
-    $error_handler = new Raven_ErrorHandler($client);
-    $error_handler->registerExceptionHandler();
-    $error_handler->registerErrorHandler();
-    $error_handler->registerShutdownFunction();
+    if (!file_exists($filename)) {
+        http_response_code(404);
+        Sentry\captureMessage('404 triggered on ' . $filename);
+        return include __DIR__ . '/404.php';
+    }
 
     $countryCodes = array (
         'AT' => 'Austria',
@@ -61,6 +63,7 @@
             $result = $vies->validateVat($target['country'], $target['vat']);
         } catch (\SoapFault $e) {
             $result = 'VAT registration service VIES is unavailable right now';
+            Sentry\captureException($e);
         }
     }
 ?>
@@ -83,17 +86,18 @@
             </a>
         </div>
         <div class="container">
-            <div class="row">
+            <div class="jumbotron">
                 <h1>Validate European VAT</h1>
+                <p>Quick and easy interface to validate <a title="VIES Service provided by EC">VAT Information Exchange System (VIES)</a> of the European Commission (EC). This application is a frontend for the PHP package <a href="https://github.com/DragonBe/vies" title="dragonbe/vies on GitHub">dragonbe/vies</a> which you can use in your PHP applications.</p><p>This service is provided for free on <a href="https://vies-web.azurewebsites.net">vies-web.azurewebsites.net</a>.</p>
             </div>
             <?php if (null !== $result): ?>
                 <?php if($result instanceof \DragonBe\Vies\CheckVatResponse && $result->isValid()): ?>
                     <div class="row">
-                        <div class="col-md-12 bg-success"><div class="center-block"><p><span class="glyphicon glyphicon-ok-sign"> VAT registration number is valid</span></p></div></div>
+                        <div class="alert alert-success" role="alert"><span class="glyphicon glyphicon-ok-sign"></span> VAT registration number is valid</div>
                     </div>
                 <?php elseif ($result instanceof \DragonBe\Vies\CheckVatResponse && false === $result->isValid()): ?>
                     <div class="row">
-                        <div class="col-md-12 bg-danger"><div class="center-block"><p><span class="glyphicon glyphicon-exclamation-sign"> VAT registration number is NOT valid</span></p></div></div>
+                        <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign"></span> VAT registration number is NOT valid</div>
                     </div>
                 <?php else: ?>
                     <div class="row">
@@ -130,7 +134,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <button id="verify" class="btn btn-success"><span class="glyphicon glyphicon-check"> Validate</span></button>
+                    <button id="verify" class="btn btn-success"><span class="glyphicon glyphicon-check"></span> Validate</button>
                     <a id="clear" class="btn btn-default" href="<?php echo substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], 'index.php')) ?>">Clear</a>
                 </form>
             </div>
