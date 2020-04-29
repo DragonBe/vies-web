@@ -10,11 +10,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4 || >7.0",
         "ext-soap": "*",
-        "dragonbe/vies": "1.0.2",
-        "silex/silex": "v1.2.1",
-        "symfony/validator": "2.0.7",
-        "sentry/sentry": "^1.6"
+        "dragonbe/vies": "^2.1.0",
+        "symfony/validator": "^2.0",
+        "sentry/sdk": "^2.1"
     }
 }
