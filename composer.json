@@ -13,7 +13,6 @@
         "php": ">=5.4 || >7.0",
         "ext-soap": "*",
         "dragonbe/vies": "^2.1.0",
-        "symfony/validator": "^2.0",
         "sentry/sdk": "^2.1"
     }
 }
