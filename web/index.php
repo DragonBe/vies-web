@@ -47,23 +47,28 @@
     );
 
     $result = null;
+    $error = false;
     if (array () !== $_POST) {
         $target = array (
             'country' => (isset ($_POST['target-country']) && '' !== $_POST['target-country']) ? $_POST['target-country'] : null,
             'vat' => (isset ($_POST['target-vat']) && '' !== $_POST['target-vat']) ? $_POST['target-vat'] : null,
         );
-        if (null === $target['country'] || !in_array($target['country'], array_keys($countryCodes))) {
+        if ('' === (string) $target['country'] || !in_array($target['country'], array_keys($countryCodes))) {
             $result = 'Country code is incorrect';
+            $error = true;
         }
-        if (null === $target['vat']) {
+        if ('' === (string) $target['vat']) {
             $result = 'VAT requires a valid value';
+            $error = true;
         }
-        $vies = new \DragonBe\Vies\Vies();
-        try {
-            $result = $vies->validateVat($target['country'], $target['vat']);
-        } catch (\SoapFault $e) {
-            $result = 'VAT registration service VIES is unavailable right now';
-            Sentry\captureException($e);
+        if (false === $error) {
+            $vies = new \DragonBe\Vies\Vies();
+            try {
+                $result = $vies->validateVat($target['country'], $target['vat']);
+            } catch (\SoapFault $e) {
+                $result = 'VAT registration service VIES is unavailable right now';
+                Sentry\captureException($e);
+            }
         }
     }
 ?>
@@ -85,11 +90,11 @@
                 <img src="assets/images/fork-us-on-github.png" width="149" height="149" alt="Fork us on GitHub"/>
             </a>
         </div>
+        <div class="jumbotron">
+            <h1>Validate European VAT</h1>
+            <p>Quick and easy interface to validate <a title="VIES Service provided by EC">VAT Information Exchange System (VIES)</a> of the European Commission (EC). This application is a frontend for the PHP package <a href="https://github.com/DragonBe/vies" title="dragonbe/vies on GitHub">dragonbe/vies</a> which you can use in your PHP applications.</p><p>This service is provided for free on <a href="https://vies-web.azurewebsites.net">vies-web.azurewebsites.net</a>.</p>
+        </div>
         <div class="container">
-            <div class="jumbotron">
-                <h1>Validate European VAT</h1>
-                <p>Quick and easy interface to validate <a title="VIES Service provided by EC">VAT Information Exchange System (VIES)</a> of the European Commission (EC). This application is a frontend for the PHP package <a href="https://github.com/DragonBe/vies" title="dragonbe/vies on GitHub">dragonbe/vies</a> which you can use in your PHP applications.</p><p>This service is provided for free on <a href="https://vies-web.azurewebsites.net">vies-web.azurewebsites.net</a>.</p>
-            </div>
             <?php if (null !== $result): ?>
                 <?php if($result instanceof \DragonBe\Vies\CheckVatResponse && $result->isValid()): ?>
                     <div class="row">
@@ -101,7 +106,7 @@
                     </div>
                 <?php else: ?>
                     <div class="row">
-                        <div class="col-md-12 bg-info"><div class="center-block"><p><span class="glyphicon glyphicon-info-sign"> <?php echo $result ?></span></p></div></div>
+                        <div class="alert alert-danger"><p><span class="glyphicon glyphicon-info-sign"></span> <?php echo $result ?></p></div>
                     </div>
                 <?php endif ?>
             <?php endif ?>
