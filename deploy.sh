@@ -31,17 +31,17 @@ function removeArtefact() {
 
 function pointToRightPath() {
   echo "Setting the correct entry point op app service"
-  az webapp config set -g PHP_Tools_RG -n vies-web --generic-configurations '{"virtualApplications": [{"virtualPath": "/", "physicalPath": "site\\wwwroot\\web"}]}'
+  az webapp config set -g $AZ_RESOURCE_GROUP -n $AZ_APP_SERVICE_NAME --generic-configurations '{"virtualApplications": [{"virtualPath": "/", "physicalPath": "site\\wwwroot\\web"}]}'
 }
 
 function setDefaultDocuments() {
   echo "Set default document to index.php"
-  az webapp config set -g PHP_Tools_RG -n vies-web --generic-configurations '{"defaultDocuments": ["index.php"]}'
+  az webapp config set -g $AZ_RESOURCE_GROUP -n $AZ_APP_SERVICE_NAME --generic-configurations '{"defaultDocuments": ["index.php"]}'
 }
 
 function enableLogging() {
   echo "Enable logging on the app service"
-  az webapp log config -g PHP_Tools_RG -n vies-web --application-logging true --web-server-logging filesystem
+  az webapp log config -g $AZ_RESOURCE_GROUP -n $AZ_APP_SERVICE_NAME --application-logging true --web-server-logging filesystem
 }
 
 usage $#
