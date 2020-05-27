@@ -2,3 +2,5 @@
 build/
 vendor/
 *.zip
+web/.well-known/acme-challenge/*
+!web/.well-known/acme-challenge/web.config

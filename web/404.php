@@ -16,11 +16,23 @@
         <img src="assets/images/fork-us-on-github.png" width="149" height="149" alt="Fork us on GitHub"/>
     </a>
 </div>
-<div class="container">
-    <div class="jumbotron">
-        <h1>404 Not Found</h1>
-        <p>It seems you were looking for something we don't have. You should <a href="/">return</a> to our main page.</p>
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="logo-box">
+            <div style="float: left; width: 200px; padding-top: 20px; display: block;">
+                <img class="img-circle" src="https://cdn.in2it.be/dragonbe/vies_square.png" alt="DragonBe VIES Logo" width="200" height="200">
+            </div>
+            <div style="float: left; width: 680px; margin-left: 20px; display: block;">
+                <h1>404 Not Found</h1>
+                <p>It seems you were looking for something we don't have. You should <a href="/">return</a> to our main page.</p>
+            </div>
+            <div class="clearfix"></div>
+        </div>
     </div>
+</div>
+<div class="container">
+    <p>We are really sorry, but there's absolutely nothing you can do here.</p>
 </div>
 <script type="application/javascript" src="assets/js/jquery-1.11.1.js"/>
 <script type="application/javascript" src="assets/js/bootstrap.js"/>

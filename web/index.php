@@ -91,8 +91,18 @@
             </a>
         </div>
         <div class="jumbotron">
-            <h1>Validate European VAT</h1>
-            <p>Quick and easy interface to validate <a title="VIES Service provided by EC">VAT Information Exchange System (VIES)</a> of the European Commission (EC). This application is a frontend for the PHP package <a href="https://github.com/DragonBe/vies" title="dragonbe/vies on GitHub">dragonbe/vies</a> which you can use in your PHP applications.</p><p>This service is provided for free on <a href="https://vies-web.azurewebsites.net">vies-web.azurewebsites.net</a>.</p>
+            <div class="container">
+                <div class="logo-box">
+                    <div style="float: left; width: 200px; padding-top: 20px; display: block;">
+                        <img class="img-circle" src="https://cdn.in2it.be/dragonbe/vies_square.png" alt="DragonBe VIES Logo" width="200" height="200">
+                    </div>
+                    <div style="float: left; width: 680px; margin-left: 20px; display: block;">
+                        <h1>Validate European VAT</h1>
+                        <p>Quick and easy interface to validate <a title="VIES Service provided by EC">VAT Information Exchange System (VIES)</a> of the European Commission (EC). This application is a frontend for the PHP package <a href="https://github.com/DragonBe/vies" title="dragonbe/vies on GitHub">dragonbe/vies</a> which you can use in your PHP applications.</p><p>This service is provided for free on <a href="https://vies-web.azurewebsites.net">vies-web.azurewebsites.net</a>.</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
         </div>
         <div class="container">
             <?php if (null !== $result): ?>
