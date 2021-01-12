@@ -1,76 +1,84 @@
 <?php
 
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
-    require_once dirname(__DIR__) . '/config/config.php';
+use DragonBe\Vies\Vies;
+use DragonBe\Vies\ViesServiceException;
 
-    Sentry\init(['dsn' => $config['sentry']]);
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/config/config.php';
+
+Sentry\init(['dsn' => $config['sentry']]);
 
 
-    $filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
-    if (php_sapi_name() === 'cli-server' && is_file($filename)) {
-        return false;
-    }
-    if (!file_exists($filename)) {
-        http_response_code(404);
-        Sentry\captureMessage('404 triggered on ' . $filename);
-        return include __DIR__ . '/404.php';
-    }
+$filename = __DIR__.preg_replace('#(\?.*)$#', '', $_SERVER['REQUEST_URI']);
+if (php_sapi_name() === 'cli-server' && is_file($filename)) {
+    return false;
+}
+if (!file_exists($filename)) {
+    http_response_code(404);
+    Sentry\captureMessage('404 triggered on ' . $filename);
+    return include __DIR__ . '/404.php';
+}
 
-    $countryCodes = array (
-        'AT' => 'Austria',
-        'BE' => 'Belgium',
-        'BG' => 'Bulgaria',
-        'CY' => 'Cyprus',
-        'CZ' => 'Czech Republic',
-        'DE' => 'Germany',
-        'DK' => 'Danmark',
-        'EE' => 'Estonia',
-        'EL' => 'Greece',
-        'ES' => 'Spain',
-        'FI' => 'Finland',
-        'FR' => 'France',
-        'HR' => 'Hungary',
-        'IE' => 'Ireland',
-        'IT' => 'Italy',
-        'LU' => 'Luxembourg',
-        'LV' => 'Latvia',
-        'LT' => 'Lithuania',
-        'MT' => 'Malta',
-        'NL' => 'Netherlands',
-        'PL' => 'Poland',
-        'PT' => 'Portugal',
-        'RO' => 'Romania',
-        'SE' => 'Sweden',
-        'SI' => 'Slovenia',
-        'SK' => 'Slovakia',
-        'UK' => 'United Kingdom',
+$countryCodes = [
+    'AT' => 'Austria',
+    'BE' => 'Belgium',
+    'BG' => 'Bulgaria',
+    'CY' => 'Cyprus',
+    'CZ' => 'Czech Republic',
+    'DE' => 'Germany',
+    'DK' => 'Danmark',
+    'EE' => 'Estonia',
+    'EL' => 'Greece',
+    'ES' => 'Spain',
+    'FI' => 'Finland',
+    'FR' => 'France',
+    'HR' => 'Hungary',
+    'IE' => 'Ireland',
+    'IT' => 'Italy',
+    'LU' => 'Luxembourg',
+    'LV' => 'Latvia',
+    'LT' => 'Lithuania',
+    'MT' => 'Malta',
+    'NL' => 'Netherlands',
+    'PL' => 'Poland',
+    'PT' => 'Portugal',
+    'RO' => 'Romania',
+    'SE' => 'Sweden',
+    'SI' => 'Slovenia',
+    'SK' => 'Slovakia',
+    'GB' => 'United Kingdom - Unsupported since 2021-01-01',
+    'XI' => 'United Kingdom (Northern Ireland)',
+    'EU' => 'MOSS Number',
+];
+
+$result = null;
+$error = false;
+if ([] !== $_POST) {
+    $target = array (
+        'country' => (isset ($_POST['target-country']) && '' !== $_POST['target-country']) ? $_POST['target-country'] : null,
+        'vat' => (isset ($_POST['target-vat']) && '' !== $_POST['target-vat']) ? $_POST['target-vat'] : null,
     );
-
-    $result = null;
-    $error = false;
-    if (array () !== $_POST) {
-        $target = array (
-            'country' => (isset ($_POST['target-country']) && '' !== $_POST['target-country']) ? $_POST['target-country'] : null,
-            'vat' => (isset ($_POST['target-vat']) && '' !== $_POST['target-vat']) ? $_POST['target-vat'] : null,
-        );
-        if ('' === (string) $target['country'] || !in_array($target['country'], array_keys($countryCodes))) {
-            $result = 'Country code is incorrect';
-            $error = true;
-        }
-        if ('' === (string) $target['vat']) {
-            $result = 'VAT requires a valid value';
-            $error = true;
-        }
-        if (false === $error) {
-            $vies = new \DragonBe\Vies\Vies();
-            try {
-                $result = $vies->validateVat($target['country'], $target['vat']);
-            } catch (\SoapFault $e) {
-                $result = 'VAT registration service VIES is unavailable right now';
-                Sentry\captureException($e);
-            }
+    if ('' === (string) $target['country'] || !in_array($target['country'], array_keys($countryCodes))) {
+        $result = 'Country code is incorrect';
+        $error = true;
+    }
+    if ('' === (string) $target['vat']) {
+        $result = 'VAT requires a valid value';
+        $error = true;
+    }
+    if (false === $error) {
+        $vies = new Vies();
+        try {
+            $result = $vies->validateVat($target['country'], $target['vat']);
+        } catch (ViesServiceException $viesServiceException) {
+            $result = $viesServiceException->getMessage();
+            Sentry\captureException($viesServiceException);
+        } catch (\DragonBe\Vies\ViesException $viesException) {
+            $result = 'Problem validating VAT ID: ' . $viesException->getMessage();
+            Sentry\captureException($viesException);
         }
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

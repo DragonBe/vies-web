@@ -48,7 +48,6 @@ ARG VIES_HOME=/var/run/$VIES_NAME
 
 RUN groupadd -g $GID $VIES_NAME
 RUN useradd -g $GID -d $VIES_HOME -m -s /bin/bash $VIES_NAME
-USER $VIES_NAME
 
 # Copy source code and run the application
 FROM vies-user AS vies-web
@@ -63,5 +62,8 @@ LABEL version="1.0"
 
 WORKDIR $VIES_HOME
 COPY . $VIES_HOME
+RUN cp config/config.php.dist config/config.php
 ENTRYPOINT ["php", "-S", "0.0.0.0:18080", "-t", "web"]
 EXPOSE $VIES_PORT
+
+USER $VIES_NAME
